@@ -28,12 +28,12 @@ def process_pdf(file_path):
     text = extract_text_from_pdf_plumber(file_path)
     initial_names = re.findall(r'\*([A-Za-z\u4E00-\u9FFF]+)\*', text)
     invoice_numbers = re.findall(r'\b\d{8}\b|\b\d{20}\b', text)
-    amounts = [float(amount) for amount in re.findall(r'\d+\.\d{2}', text) if amount]
+    amounts = [float(amount) for amount in re.findall(r'￥(\d+\.\d{2})', text) if amount]
     if not (initial_names and invoice_numbers and amounts):
         text = extract_text_from_pdf_miner(file_path)
         initial_names = re.findall(r'\*\*(.+?)\*\*', text)
         invoice_numbers = re.findall(r'\b\d{8}\b|\b\d{20}\b', text)
-        amounts = [float(amount) for amount in re.findall(r'\d+\.\d{2}', text) if amount]
+        amounts = [float(amount) for amount in re.findall(r'￥(\d+\.\d{2})', text) if amount]
     if initial_names and invoice_numbers and amounts:
         largest_amount = max(amounts)
         new_file_name = f"{initial_names[0]}_{invoice_numbers[0]}_{largest_amount:.2f}.pdf"
